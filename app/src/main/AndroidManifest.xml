@@ -12,9 +12,12 @@
         android:theme="@style/Theme.NotePadKotlin"
         tools:targetApi="31">
         <activity
+            android:name=".ConfirmDeleteDialogListener"
+            android:exported="false" />
+        <activity
             android:name=".DetailNoteActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false"/>
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".NoteListActivity"
             android:exported="true">
