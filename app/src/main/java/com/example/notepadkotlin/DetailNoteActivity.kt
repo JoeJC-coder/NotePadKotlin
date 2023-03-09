@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 class DetailNoteActivity : AppCompatActivity() {
     companion object{
@@ -22,6 +23,9 @@ class DetailNoteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_note)
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         note = if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.TIRAMISU) {
             Log.i("Mon probleme", "je suis dans TIRAMISU")
