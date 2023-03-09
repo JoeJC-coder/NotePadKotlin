@@ -1,7 +1,9 @@
 package com.example.notepadkotlin
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -35,10 +37,37 @@ class NoteListActivity : AppCompatActivity(), View.OnClickListener {
         recyclerView.adapter = adapter
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode != Activity.RESULT_OK || data == null){
+            return
+        }
+        when(requestCode){
+            DetailNoteActivity.REQUEST_EDIT_NOTE -> processEditNoteResult(data)
+        }
+    }
+
+    private fun processEditNoteResult(data: Intent) {
+        val noteIndex = data.getIntExtra(DetailNoteActivity.EXTRA_NOTE_INDEX, -1)
+        val note = if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.TIRAMISU) {
+            Log.i("Mon probleme", "je suis dans TIRAMISU")
+            data.getParcelableExtra(DetailNoteActivity.EXTRA_NOTE, Note::class.java)!!
+        } else {
+            Log.i("Mon probleme", "je suis depreciate")
+            data.getParcelableExtra<Note>(DetailNoteActivity.EXTRA_NOTE)!!
+        }
+        saveNote(note, noteIndex)
+    }
+
     override fun onClick(view : View) {
         if (view.tag != null)
             //Log.i("NoteActivity", "Click sur note")
             showNoteDetail(view.tag as Int)
+    }
+
+    fun saveNote(note: Note, noteIndex: Int){
+        notes[noteIndex] = note
+        adapter.notifyDataSetChanged()
     }
 
     fun showNoteDetail(noteIndex: Int) {
@@ -47,6 +76,7 @@ class NoteListActivity : AppCompatActivity(), View.OnClickListener {
 
         intent.putExtra(DetailNoteActivity.EXTRA_NOTE, note)
         intent.putExtra(DetailNoteActivity.EXTRA_NOTE_INDEX, noteIndex)
-        startActivity(intent)
+        //startActivity(intent)
+        startActivityForResult(intent, DetailNoteActivity.REQUEST_EDIT_NOTE)
     }
 }
